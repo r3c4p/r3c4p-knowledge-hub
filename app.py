@@ -80,19 +80,19 @@ Tampilkan output sebagai:
 Tulis dalam bahasa Indonesia, dan gunakan gaya profesional.
 """
 
-            try:
-                client = openai.OpenAI()
-response = client.chat.completions.create(
-    model="gpt-4",
-    messages=[{"role": "user", "content": prompt}]
-)
-output = response.choices[0].message.content
+    try:
+    client = openai.OpenAI()
+    response = client.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    output = response.choices[0].message.content
+    st.markdown("### 🔍 GPT R3C4P Profile Analysis")
+    st.markdown(output)
 
-                st.markdown("### 🔍 GPT R3C4P Profile Analysis")
-                st.markdown(output)
+except Exception as e:
+    st.error(f"Gagal memanggil OpenAI API: {e}")
 
-            except Exception as e:
-                st.error(f"Gagal memanggil OpenAI API: {e}")
 
     elif st.session_state.page == "Map pain points":
         st.write("Identify key issues and map to Telkomsel solutions.")
