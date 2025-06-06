@@ -1,0 +1,16 @@
+
+credentials:
+  usernames:
+    admin:
+      name: Admin R3C4P
+      password: '$2b$12$ezDnjmzibsdvFtJUxbGEC.I8.nKwE4Jyun.qSX2wDxRwPm2DgQfsK'
+    analyst1:
+      name: Analyst One
+      password: '$2b$12$ZPrbXqQGxxVdDwz3oQZqFeOTaO2lxa3uTnomHbCPIdxr1GyNnzv4q'
+    saleslead:
+      name: Sales Lead
+      password: '$2b$12$uXji8dFNxKlNAi8AoEbuNOip88Vmn4OYqDEivgxpap4kebqtYvdjy'
+cookie:
+  name: r3c4p_cookie
+  key: r3c4p_auth
+  expiry_days: 1
