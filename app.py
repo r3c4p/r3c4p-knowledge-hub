@@ -1,5 +1,8 @@
 import streamlit as st
 import streamlit_authenticator as stauth
+import openai
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+
 import yaml
 import pandas as pd
 from yaml.loader import SafeLoader
