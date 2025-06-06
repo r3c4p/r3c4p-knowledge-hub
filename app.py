@@ -16,7 +16,7 @@ authenticator = stauth.Authenticate(
 )
 
 # Login UI
-name, authentication_status, username = authenticator.login("Login", "main")
+name, authentication_status, username = authenticator.login(location="main")
 
 if authentication_status:
     authenticator.logout("Logout", "sidebar")
