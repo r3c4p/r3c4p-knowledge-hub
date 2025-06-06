@@ -43,49 +43,73 @@ if authentication_status:
     # Main Content
     st.title(st.session_state.page)
 
-    if st.session_state.page == "Identify a customer":
-        st.write("Analyze a customer based on the 4P R3C4P framework.")
-        customer_name = st.text_input("Customer name", "PT Industri Jaya Komponen")
-        level = st.selectbox("Analysis level", ["Corporate Group", "Corporate", "Division", "Project", "Subsidiary"])
+ if st.session_state.page == "Identify a customer":
+    st.write("Analyze a customer based on the 4P R3C4P framework.")
+    customer_name = st.text_input("Customer name", "PT Industri Jaya Komponen")
+    level = st.selectbox("Analysis level", ["Corporate Group", "Corporate", "Division", "Project", "Subsidiary"])
 
-        if st.button("Generate analysis"):
-            with st.form("profil_form"):
-                st.subheader("1.1 Company Profile")
-                nama_perusahaan = st.text_input("Nama Perusahaan")
-                industri = st.text_input("Industri")
-                holding = st.text_input("Holding")
-                lokasi = st.text_input("Lokasi Kantor Pusat")
-                jumlah_cabang = st.number_input("Jumlah Cabang/Kantor", min_value=0)
-                jumlah_karyawan = st.number_input("Jumlah Karyawan", min_value=0)
-                jumlah_pelanggan = st.number_input("Jumlah Pelanggan", min_value=0)
-                revenue = st.text_input("Revenue (Rupiah)")
-                jumlah_aset = st.text_input("Jumlah Aset (Rupiah)")
-                struktur_permodalan = st.text_input("Struktur Permodalan")
-                customer_type = st.selectbox("Customer", ["B2B", "B2G", "Keduanya"])
-                mitra = st.text_input("Mitra/Suplier")
-                produk_utama = st.text_input("Produk Utama (Merk)")
-                kontak = st.text_input("Website/Email/Telp")
-                status_digital = st.selectbox("Status Digitalisasi", ["Digital Ready", "Digitalizing", "Konvensional"])
+    if st.button("Generate analysis"):
+        # Kirim ke GPT untuk narasi analisis awal
+        prompt = f"""
+Buat analisa awal berdasarkan pendekatan R3C4P (Profile) untuk perusahaan dengan nama "{customer_name}" pada level analisa "{level}".
+Tuliskan dalam bahasa Indonesia dan format narasi problem statement.
+"""
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        gpt_analysis = response['choices'][0]['message']['content']
+        st.markdown("### 🔍 GPT Analysis")
+        st.write(gpt_analysis)
 
-                submitted = st.form_submit_button("Simpan dan Tampilkan")
-                if submitted:
-                    st.session_state["profil_perusahaan"] = {
-                        "Nama Perusahaan": nama_perusahaan,
-                        "Industri": industri,
-                        "Holding": holding,
-                        "Lokasi Kantor Pusat": lokasi,
-                        "Jumlah Cabang/Kantor": jumlah_cabang,
-                        "Jumlah Karyawan": jumlah_karyawan,
-                        "Jumlah Pelanggan": jumlah_pelanggan,
-                        "Revenue (Rupiah)": revenue,
-                        "Jumlah Aset (Rupiah)": jumlah_aset,
-                        "Struktur Permodalan": struktur_permodalan,
-                        "Customer (B2B, B2G)": customer_type,
-                        "Mitra/Suplier": mitra,
-                        "Produk Utama (Merk)": produk_utama,
-                        "Website/Email/Telp": kontak,
-                        "Status Digitalisasi": status_digital
-                    }
+        # Form Profil 1.1
+        with st.form("profil_form"):
+            st.subheader("1.1 Company Profile")
+            nama_perusahaan = st.text_input("Nama Perusahaan", customer_name)
+            industri = st.text_input("Industri")
+            holding = st.text_input("Holding")
+            lokasi = st.text_input("Lokasi Kantor Pusat")
+            jumlah_cabang = st.number_input("Jumlah Cabang/Kantor", min_value=0)
+            jumlah_karyawan = st.number_input("Jumlah Karyawan", min_value=0)
+            jumlah_pelanggan = st.number_input("Jumlah Pelanggan", min_value=0)
+            revenue = st.text_input("Revenue (Rupiah)")
+            jumlah_aset = st.text_input("Jumlah Aset (Rupiah)")
+            struktur_permodalan = st.text_input("Struktur Permodalan")
+            customer_type = st.selectbox("Customer", ["B2B", "B2G", "Keduanya"])
+            mitra = st.text_input("Mitra/Suplier")
+            produk_utama = st.text_input("Produk Utama (Merk)")
+            kontak = st.text_input("Website/Email/Telp")
+            status_digital = st.selectbox("Status Digitalisasi", ["Digital Ready", "Digitalizing", "Konvensional"])
+
+            submitted = st.form_submit_button("Simpan dan Tampilkan")
+            if submitted:
+                st.session_state["profil_perusahaan"] = {
+                    "Nama Perusahaan": nama_perusahaan,
+                    "Industri": industri,
+                    "Holding": holding,
+                    "Lokasi Kantor Pusat": lokasi,
+                    "Jumlah Cabang/Kantor": jumlah_cabang,
+                    "Jumlah Karyawan": jumlah_karyawan,
+                    "Jumlah Pelanggan": jumlah_pelanggan,
+                    "Revenue (Rupiah)": revenue,
+                    "Jumlah Aset (Rupiah)": jumlah_aset,
+                    "Struktur Permodalan": struktur_permodalan,
+                    "Customer (B2B, B2G)": customer_type,
+                    "Mitra/Suplier": mitra,
+                    "Produk Utama (Merk)": produk_utama,
+                    "Website/Email/Telp": kontak,
+                    "Status Digitalisasi": status_digital
+                }
+
+        if "profil_perusahaan" in st.session_state:
+            profil = st.session_state["profil_perusahaan"]
+            st.markdown("### 📊 Output Tabel 1.1 - Profil Perusahaan")
+            profil_df = pd.DataFrame({
+                "Elemen Profil": list(profil.keys()),
+                "Data": list(profil.values())
+            })
+            st.table(profil_df)
+
 
             if "profil_perusahaan" in st.session_state:
                 st.markdown("### Output Tabel 1.1 - Profil Perusahaan")
