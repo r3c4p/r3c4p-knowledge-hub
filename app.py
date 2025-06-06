@@ -1,4 +1,3 @@
-
 import streamlit as st
 import streamlit_authenticator as stauth
 import yaml
@@ -65,20 +64,21 @@ if authentication_status:
     # Reference section
     st.markdown("---")
     st.subheader("4P Analytic Levels")
-    st.markdown("- Corporate Group  
+    st.markdown("""
+- Corporate Group  
 - Corporate  
 - Division  
 - Project  
-- Subsidiary")
+- Subsidiary
+""")
 
     st.subheader("R3C4P Framework")
-    st.markdown("**Profile**: customer identity and status  
-"
-                "**People**: key roles and organization  
-"
-                "**Process**: workflows or existing solutions  
-"
-                "**Problem**: underlying needs or pain points")
+    st.markdown("""
+**Profile**: customer identity and status  
+**People**: key roles and organization  
+**Process**: workflows or existing solutions  
+**Problem**: underlying needs or pain points
+""")
 
 elif authentication_status is False:
     st.error("Invalid username or password")
