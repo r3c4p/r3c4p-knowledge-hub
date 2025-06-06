@@ -79,9 +79,10 @@ Tuliskan dalam bahasa Indonesia dengan gaya profesional.
 
             try:
                 response = client.chat.completions.create(
-                    model="gpt-4",
-                    messages=[{"role": "user", "content": prompt}]
-                )
+    model="gpt-4o",
+    messages=[{"role": "user", "content": prompt}]
+)
+
                 output = response.choices[0].message.content
                 st.markdown("### 🔍 GPT R3C4P Profile Analysis")
                 st.markdown(output)
