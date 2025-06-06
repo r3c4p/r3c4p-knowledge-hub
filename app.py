@@ -57,7 +57,16 @@ buatlah output analisa naratif dan tabel Profil Perusahaan (Tabel 1.1) untuk:
 Nama Perusahaan: {customer_name}
 Level Analisa: {level}
 
-Tabel profil perusahaan (Tabel 1.1) dengan elemen:
+Tampilkan output sebagai:
+1. Narasi problem statement (mengikuti format R3C4P):
+- Masalah yang kami hadapi adalah: ...
+- Hal ini disebabkan oleh: ...
+- Ini menyebabkan beberapa masalah seperti: ...
+- Terutama bagi: ...
+- Jika masalah ini berlanjut, maka akan terjadi: ...
+- Bahkan saat ini, masalah ini sudah menghambat kami untuk: ...
+
+2. Tabel profil perusahaan (Tabel 1.1) dengan elemen:
 - Nama Perusahaan
 - Industri
 - Holding
@@ -76,12 +85,18 @@ Tabel profil perusahaan (Tabel 1.1) dengan elemen:
 
 Tuliskan dalam bahasa Indonesia dengan gaya profesional.
 """
-
             try:
-                response = client.chat.completions.create(
-    model="gpt-4o",
-    messages=[{"role": "user", "content": prompt}]
-)
+                try:
+                    response = client.chat.completions.create(
+                        model="gpt-4o",
+                        messages=[{"role": "user", "content": prompt}]
+                    )
+                except openai.RateLimitError:
+                    st.warning("❗ GPT-4o limit reached, switching to GPT-3.5...")
+                    response = client.chat.completions.create(
+                        model="gpt-3.5-turbo",
+                        messages=[{"role": "user", "content": prompt}]
+                    )
 
                 output = response.choices[0].message.content
                 st.markdown("### 🔍 GPT R3C4P Profile Analysis")
