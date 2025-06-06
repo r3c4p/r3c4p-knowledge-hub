@@ -39,20 +39,58 @@ if authentication_status:
     # Main Content
     st.title(st.session_state.page)
 
-    if st.session_state.page == "Identify a customer":
         st.write("Analyze a customer based on the 4P R3C4P framework.")
-        customer_name = st.text_input("Customer name", "PT Industri Jaya Komponen")
-        level = st.selectbox("Analysis level", ["Corporate Group", "Corporate", "Division", "Project", "Subsidiary"])
-        if st.button("Generate analysis"):
-            st.markdown("### Customer Profile, People, Process, Problem")
-            with st.expander("▶ Profile"):
-                st.write("Customer identity and structure")
-            with st.expander("▶ People"):
-                st.write("Key customer personnel")
-            with st.expander("▶ Process"):
-                st.write("Workflows or current business process")
-            with st.expander("▶ Problem"):
-                st.write("Identified pain points or gaps")
+    customer_name = st.text_input("Customer name", "PT Industri Jaya Komponen")
+    level = st.selectbox("Analysis level", ["Corporate Group", "Corporate", "Division", "Project", "Subsidiary"])
+
+    if st.button("Generate analysis"):
+        with st.form("profil_form"):
+            st.subheader("1.1 Company Profile")
+            nama_perusahaan = st.text_input("Nama Perusahaan")
+            industri = st.text_input("Industri")
+            holding = st.text_input("Holding")
+            lokasi = st.text_input("Lokasi Kantor Pusat")
+            jumlah_cabang = st.number_input("Jumlah Cabang/Kantor", min_value=0)
+            jumlah_karyawan = st.number_input("Jumlah Karyawan", min_value=0)
+            jumlah_pelanggan = st.number_input("Jumlah Pelanggan", min_value=0)
+            revenue = st.text_input("Revenue (Rupiah)")
+            jumlah_aset = st.text_input("Jumlah Aset (Rupiah)")
+            struktur_permodalan = st.text_input("Struktur Permodalan")
+            customer_type = st.selectbox("Customer", ["B2B", "B2G", "Keduanya"])
+            mitra = st.text_input("Mitra/Suplier")
+            produk_utama = st.text_input("Produk Utama (Merk)")
+            kontak = st.text_input("Website/Email/Telp")
+            status_digital = st.selectbox("Status Digitalisasi", ["Digital Ready", "Digitalizing", "Konvensional"])
+
+            submitted = st.form_submit_button("Simpan dan Tampilkan")
+            if submitted:
+                st.session_state["profil_perusahaan"] = {
+                    "Nama Perusahaan": nama_perusahaan,
+                    "Industri": industri,
+                    "Holding": holding,
+                    "Lokasi Kantor Pusat": lokasi,
+                    "Jumlah Cabang/Kantor": jumlah_cabang,
+                    "Jumlah Karyawan": jumlah_karyawan,
+                    "Jumlah Pelanggan": jumlah_pelanggan,
+                    "Revenue (Rupiah)": revenue,
+                    "Jumlah Aset (Rupiah)": jumlah_aset,
+                    "Struktur Permodalan": struktur_permodalan,
+                    "Customer (B2B, B2G)": customer_type,
+                    "Mitra/Suplier": mitra,
+                    "Produk Utama (Merk)": produk_utama,
+                    "Website/Email/Telp": kontak,
+                    "Status Digitalisasi": status_digital
+                }
+
+        if "profil_perusahaan" in st.session_state:
+            st.markdown("### Output Tabel 1.1 - Profil Perusahaan")
+            profil_dict = st.session_state["profil_perusahaan"]
+            profil_df = pd.DataFrame({
+                "Elemen Profil": list(profil_dict.keys()),
+                "Data": list(profil_dict.values())
+            })
+            st.table(profil_df)
+
 
     elif st.session_state.page == "Map pain points":
         st.write("Identify key issues and map to Telkomsel solutions.")
