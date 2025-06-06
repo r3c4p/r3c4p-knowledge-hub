@@ -1,22 +1,21 @@
-
 import streamlit as st
 import streamlit_authenticator as stauth
+import yaml
+from yaml.loader import SafeLoader
 
-# Sample users (ganti dengan data nyata jika perlu)
-names = ["Admin R3C4P"]
-usernames = ["admin"]
-passwords = stauth.Hasher(["r3c4p123"]).generate()
+# Load YAML config
+with open("config_r3c4p_auth.yaml") as file:
+    config = yaml.load(file, Loader=SafeLoader)
 
 # Setup authenticator
 authenticator = stauth.Authenticate(
-    names,
-    usernames,
-    passwords,
-    "r3c4p_cookie",
-    "r3c4p_auth",
-    cookie_expiry_days=1
+    config['credentials'],
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days']
 )
 
+# Login UI
 name, authentication_status, username = authenticator.login("Login", "main")
 
 if authentication_status:
@@ -24,7 +23,6 @@ if authentication_status:
     st.sidebar.title(f"Selamat datang, {name}")
     st.title("🔐 R3C4P Knowledge Hub")
     st.write("Anda berhasil login dan dapat mengakses fitur analisa pelanggan.")
-
 elif authentication_status is False:
     st.error("Username atau password salah.")
 elif authentication_status is None:
