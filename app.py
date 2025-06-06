@@ -5,8 +5,8 @@ import yaml
 import pandas as pd
 from yaml.loader import SafeLoader
 
-# Load OpenAI API Key
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+# Load OpenAI API key
+client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 # Load YAML config
 with open("config_r3c4p_auth.yaml") as file:
@@ -41,7 +41,7 @@ if authentication_status:
     if st.sidebar.button("Retrieve insights"):
         st.session_state.page = "Retrieve insights"
 
-    # Main content
+    # Main Content
     st.title(st.session_state.page)
 
     if st.session_state.page == "Identify a customer":
@@ -57,10 +57,7 @@ buatlah output analisa naratif dan tabel Profil Perusahaan (Tabel 1.1) untuk:
 Nama Perusahaan: {customer_name}
 Level Analisa: {level}
 
-Tampilkan output sebagai:
-1. Narasi problem statement (gunakan format R3C4P)
-2. Tabel profil perusahaan (berisi elemen berikut):
-
+Tabel profil perusahaan (Tabel 1.1) dengan elemen:
 - Nama Perusahaan
 - Industri
 - Holding
@@ -77,22 +74,20 @@ Tampilkan output sebagai:
 - Website/Email/Telp
 - Status Digitalisasi
 
-Tulis dalam bahasa Indonesia, dan gunakan gaya profesional.
+Tuliskan dalam bahasa Indonesia dengan gaya profesional.
 """
 
-    try:
-    client = openai.OpenAI()
-    response = client.chat.completions.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": prompt}]
-    )
-    output = response.choices[0].message.content
-    st.markdown("### 🔍 GPT R3C4P Profile Analysis")
-    st.markdown(output)
+            try:
+                response = client.chat.completions.create(
+                    model="gpt-4",
+                    messages=[{"role": "user", "content": prompt}]
+                )
+                output = response.choices[0].message.content
+                st.markdown("### 🔍 GPT R3C4P Profile Analysis")
+                st.markdown(output)
 
-except Exception as e:
-    st.error(f"Gagal memanggil OpenAI API: {e}")
-
+            except Exception as e:
+                st.error(f"Gagal memanggil OpenAI API: {e}")
 
     elif st.session_state.page == "Map pain points":
         st.write("Identify key issues and map to Telkomsel solutions.")
