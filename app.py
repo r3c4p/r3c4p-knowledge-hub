@@ -81,11 +81,13 @@ Tulis dalam bahasa Indonesia, dan gunakan gaya profesional.
 """
 
             try:
-                response = openai.ChatCompletion.create(
-                    model="gpt-4",
-                    messages=[{"role": "user", "content": prompt}]
-                )
-                output = response['choices'][0]['message']['content']
+                client = openai.OpenAI()
+response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[{"role": "user", "content": prompt}]
+)
+output = response.choices[0].message.content
+
                 st.markdown("### 🔍 GPT R3C4P Profile Analysis")
                 st.markdown(output)
 
